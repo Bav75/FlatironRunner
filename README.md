@@ -1,0 +1,1 @@
+A runner-type game built using a Rails backend and JS frontend as part of the Flatiron School Curriculum. 
