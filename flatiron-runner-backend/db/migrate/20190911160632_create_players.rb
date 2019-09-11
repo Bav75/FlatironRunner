@@ -5,6 +5,8 @@ class CreatePlayers < ActiveRecord::Migration[5.2]
       t.text :progress, array: true, default: [].to_yaml
       t.string :character
 
+      t.belongs_to :game
+
       t.timestamps
     end
   end
