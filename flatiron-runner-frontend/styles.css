@@ -15,12 +15,12 @@ body {
   }
 
   canvas {
-    background-color: #597aac;
+    /* background-color: #597aac; */
     padding: 0;
     margin: auto;
     display: block;
-    width: 900;
-    height: 512px;
+    /* width: 900px; */
+    /* height: 512px; */
     position: absolute;
     top: 0;
     bottom: 0;
