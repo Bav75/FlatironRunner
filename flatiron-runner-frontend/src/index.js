@@ -14,6 +14,34 @@ class Game {
 
 };
 
+// URLS
+const BASE_URL = "http://localhost:3000"
+const PLAYERS_URL = `${BASE_URL}/players`
+
+
+// create main menu
+let main = document.querySelector('main');
+
+let mainMenu = document.createElement('div');
+mainMenu.className = "main-menu";
+
+let usernamePrompt = document.createElement('h1');
+usernamePrompt.innerHTML = "Enter your username below";
+
+let usernameInput = document.createElement('input');
+usernameInput.type = "text";
+usernameInput.id = "username";
+
+let submitButton = document.createElement('input');
+submitButton.type = "submit";
+
+usernamePrompt.appendChild(usernameInput);
+usernamePrompt.appendChild(submitButton);
+
+mainMenu.appendChild(usernamePrompt);
+
+main.appendChild(mainMenu);
+
 // vars for handling canvas & context 
 let cvs = document.getElementById("canvas");
 let ctx = cvs.getContext("2d");
@@ -23,6 +51,8 @@ let bg = new Image();
 bg.src = "assets/purple_bg.jpeg";
 let title = new Image();
 title.src = "assets/titleScreen.png";
+let menu = new Image();
+menu.src = "assets/menu.png";
 
 // initialize the game session
 let masterGame = new Game("title");
@@ -56,6 +86,10 @@ function draw() {
         cvs.onclick = function() {
             changeState(masterGame.state);
         };
+
+        submitButton.onclick = function() {
+            handlePlayers(usernameInput.value);
+        };
        
         // masterGame.addEventListener("keydown", changeState);
 
@@ -68,9 +102,25 @@ function draw() {
 function changeState(gameState) {
     if (gameState === "title") {
         masterGame.state = "menu";
-        ctx.drawImage(bg, 0, 0, 800, 512);
+        ctx.drawImage(menu, 0, 0, 800, 512);
     };
 }
+
+function handlePlayers(name) {
+    // make use of find or create by on the backend based off the username provided 
+    configObject = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            username: name
+        })
+    };
+
+    fetch(PLAYERS_URL, configObject);
+};
 
 draw();
 
