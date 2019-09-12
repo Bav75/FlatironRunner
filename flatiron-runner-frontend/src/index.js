@@ -108,7 +108,7 @@ function changeState(gameState) {
 
 function handlePlayers(name) {
     // make use of find or create by on the backend based off the username provided 
-    configObject = {
+    let configObject = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
