@@ -82,7 +82,7 @@ title.onload = function() {
 // am only able to get animations running when they are defined in the global scope??
 let obstacles = [];
 // obstacles[0] = {x: cvs.width, y: 380};
-obstacles[0] = {x: 500, y: 380};
+obstacles[0] = {x: cvs.width, y: 380};
 
 function draw() {
     // var bg = new Image();
@@ -108,11 +108,11 @@ function draw() {
         //     obstacles[0].x--;
         // };
 
-        for (let x = 0; x < obstacles.length; x++) {
-            ctx.drawImage(bomb, obstacles[0].x, 380, 70, 70);
-            obstacles[0].x--;
+        for (let i = 0; i < obstacles.length; i++) {
+            ctx.drawImage(bomb, obstacles[i].x, 380, 70, 70);
+            obstacles[i].x--;
 
-            if (obstacles[x].x == cvs.width - 600) {
+            if (obstacles[i].x == cvs.width - 600) {
                 obstacles.push({
                     x: cvs.width,
                     y: 380
