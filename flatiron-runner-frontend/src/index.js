@@ -80,22 +80,32 @@ title.onload = function() {
 
 
 // am only able to get animations running when they are defined in the global scope??
+// FOR LOOP APPROACH 
 let obstacles = [];
-// obstacles[0] = {x: cvs.width, y: 380};
 obstacles[0] = {x: cvs.width, y: 380};
+// obstacles.push({x: cvs.width, y: 380});
+
+
+// WHILE LOOP APPROACH
+// let obstacle = {
+//     x: cvs.width,
+//     y: 380
+// };
+
+// THIS WORKS!!!!!
+// change the requirements for the reloadCounter ,i.e. how many obstacles on the level, depending on a difficulty modifier 
+// const DIFFICULTY = 5;
+// const GAP = 100;
+
+var reloadCounter = 0;
 
 function draw() {
     // var bg = new Image();
     // // I have to give the img time to load.
     // // remember ASYNC! 
-
-
     if (masterGame.state === "bg") {
-        const DIFFICULTY = 5;
-        const GAP = 100;
-
         // let obstacles = [];
-        // // obstacles[0] = {x: cvs.width, y: 380};
+        // obstacles[0] = {x: cvs.width, y: 380};
         // obstacles[0] = {x: 500, y: 380};
 
         ctx.drawImage(bg, 0, 0, 800, 512);
@@ -108,44 +118,78 @@ function draw() {
         //     obstacles[0].x--;
         // };
 
+
+        // ********************************************************
+        // FOR LOOP APPROACH START 
+        // var reloadCounter = 0;
         for (let i = 0; i < obstacles.length; i++) {
-            ctx.drawImage(bomb, obstacles[i].x, 380, 70, 70);
-            obstacles[i].x--;
-
-            if (obstacles[i].x == cvs.width - 600) {
-                obstacles.push({
-                    x: cvs.width,
-                    y: 380
-                });
+            if (reloadCounter == 5) {
+                location.reload();
+            } else {
+                console.log(reloadCounter);
+                ctx.drawImage(bomb, obstacles[i].x, 380, 70, 70);
+                obstacles[i].x--;
+    
+                 if (obstacles[i].x == cvs.width - 600) {
+                     obstacles.push({
+                         x: cvs.width,
+                         y: 380
+                     });
+                     ++reloadCounter;
+                };
             };
+            // ctx.drawImage(bomb, obstacles[i].x, 380, 70, 70);
+            // obstacles[i].x--;
+
+            //  if (obstacles[i].x == cvs.width - 600) {
+            //      obstacles.push({
+            //          x: cvs.width,
+            //          y: 380
+            //      });
+            // };
         };
+        // ********************************************************
+        // FOR LOOP APPROACH END 
 
-        // requestAnimationFrame(draw);
-
-
-
-        // while (obstacles.length < 6) {
+        // ********************************************************
+        // WHILE LOOP APPROACH START
+        // ctx.drawImage(bomb, obstacles[0].x, 380, 70, 70);
+        // ctx.drawImage(bomb, obstacle.x, obstacle.y, 70, 70);
+        // // let i = 0;
+        // let i = [];
+        // while (i.length < 5) {
+        //     console.log(i);
         //     // ctx.drawImage(bomb, obstacles[0].x, 380, 70, 70);
-        //     // obstacles[0].x -= 50;
-        //     obstacles[0].x--;
+        //     // console.log(i);
 
-        //     if (obstacles[0].x < 0) {
-        //         obstacles.push(1);
+        //     // obstacles[0].x--;
+        //     obstacle.x--;
+        //     // --obstacle.x;
+
+        //     // if (obstacles[0].x == cvs.width - 600) {
+        //     if (obstacle.x == cvs.width - 600) {
+        //         console.log("You hit the inside")
+        //         // obstacles.push({
+        //         //     x: cvs.width,
+        //         //     y: 380
+        //         // });
+        //         obstacle.x = cvs.width;
+        //         // i += 1;
+        //         i.push(1);
         //     };
-        //     // obstacles.push(1);
-        // };
 
-
-
+        // WHILE LOOP APPROACH END 
+        // ********************************************************
+        };
         // for (x = 0; x < DIFFICULTY; x++) {
         //     ctx.drawImage(bomb, (200 + GAP + (Math.floor(Math.random() * 500))), 380, 70, 70); 
         // };
 
         // ctx.drawImage(bomb, 200, 380, 70, 70); 
         // x = 200, y = 380 is the ground for the bomb sprite 
+        requestAnimationFrame(draw);
     };
     
-    requestAnimationFrame(draw);
     
         // let masterGame = new Game("title");
         
@@ -175,7 +219,7 @@ function draw() {
 
     // bg.src = "assets/purple_bg.jpeg";
     // ctx.drawImage(bg, 0, 0, 900, 512);
-};
+// };
 
 function changeState(gameState) {
     // if (gameState === "title") {
