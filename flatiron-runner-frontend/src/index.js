@@ -64,15 +64,91 @@ bomb.src = "assets/bomb.png";
 // initialize the game session
 let masterGame = new Game("title");
 
+title.onload = function() {
+    ctx.drawImage(title, 0, 0, 800, 512);
+
+    cvs.onclick = function() {
+        changeState(masterGame.state);
+        draw(masterGame.state);
+    };
+
+    submitButton.onclick = function() {
+        handlePlayers(usernameInput.value);
+    };
+
+};
+
+
+// am only able to get animations running when they are defined in the global scope??
+let obstacles = [];
+// obstacles[0] = {x: cvs.width, y: 380};
+obstacles[0] = {x: 500, y: 380};
+
 function draw() {
     // var bg = new Image();
     // // I have to give the img time to load.
     // // remember ASYNC! 
 
-    title.onload = function() {
+
+    if (masterGame.state === "bg") {
+        const DIFFICULTY = 5;
+        const GAP = 100;
+
+        // let obstacles = [];
+        // // obstacles[0] = {x: cvs.width, y: 380};
+        // obstacles[0] = {x: 500, y: 380};
+
+        ctx.drawImage(bg, 0, 0, 800, 512);
+        ctx.drawImage(sprite, 0, 200, 165, 270); 
+        // x = 0, y = 200 is the ground for the man sprite 
+            
+        // ctx.drawImage(bomb, cvs.width - 600, 380, 70, 70);
+
+        // while (obstacles[0].x > 0) {
+        //     obstacles[0].x--;
+        // };
+
+        for (let x = 0; x < obstacles.length; x++) {
+            ctx.drawImage(bomb, obstacles[0].x, 380, 70, 70);
+            obstacles[0].x--;
+
+            if (obstacles[x].x == cvs.width - 600) {
+                obstacles.push({
+                    x: cvs.width,
+                    y: 380
+                });
+            };
+        };
+
+        // requestAnimationFrame(draw);
+
+
+
+        // while (obstacles.length < 6) {
+        //     // ctx.drawImage(bomb, obstacles[0].x, 380, 70, 70);
+        //     // obstacles[0].x -= 50;
+        //     obstacles[0].x--;
+
+        //     if (obstacles[0].x < 0) {
+        //         obstacles.push(1);
+        //     };
+        //     // obstacles.push(1);
+        // };
+
+
+
+        // for (x = 0; x < DIFFICULTY; x++) {
+        //     ctx.drawImage(bomb, (200 + GAP + (Math.floor(Math.random() * 500))), 380, 70, 70); 
+        // };
+
+        // ctx.drawImage(bomb, 200, 380, 70, 70); 
+        // x = 200, y = 380 is the ground for the bomb sprite 
+    };
+    
+    requestAnimationFrame(draw);
+    
         // let masterGame = new Game("title");
         
-        ctx.drawImage(title, 0, 0, 800, 512);
 
         // if player is on start screen & clicks then change state to menu  
         // handle the state check here instead of a sep function? 
@@ -90,17 +166,12 @@ function draw() {
         //     changeState(masterGame.state)}
         //     );
 
-        cvs.onclick = function() {
-            changeState(masterGame.state);
-        };
-
-        submitButton.onclick = function() {
-            handlePlayers(usernameInput.value);
-        };
+     
        
         // masterGame.addEventListener("keydown", changeState);
 
-    };
+
+    // requestAnimationFrame(draw);
 
     // bg.src = "assets/purple_bg.jpeg";
     // ctx.drawImage(bg, 0, 0, 900, 512);
@@ -113,11 +184,6 @@ function changeState(gameState) {
     // };
     if (gameState === "title") {
         masterGame.state = "bg";
-        ctx.drawImage(bg, 0, 0, 800, 512);
-        ctx.drawImage(sprite, 0, 200, 165, 270); 
-        // x = 0, y = 200 is the ground for the man sprite 
-        ctx.drawImage(bomb, 200, 380, 70, 70); 
-        // x = 200, y = 380 is the ground for the bomb sprite 
     };
 }
 
@@ -140,7 +206,7 @@ function handlePlayers(name) {
 // update player model progress - have it be an integer that points to a specific set of levels on the frontend 
 
 draw();
-
+// requestAnimationFrame(draw);
 
 
 
