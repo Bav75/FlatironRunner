@@ -76,22 +76,31 @@ title.onload = function() {
     ctx.drawImage(title, 0, 0, 800, 512);
 
     // cvs.onclick = function() {
-        cvs.addEventListener("click", function() {
-            changeState(masterGame.state);
-        });
 
-        if (masterGame.state === "bg") {
-            cvs.removeEventListener("click", changeState);
-        };
+    // if (masterGame.state === "bg") {
+    //     cvs.removeEventListener("click", gameStart);
+    // };
+    
+    cvs.addEventListener("click", gameStart);
 
-        submitButton.onclick = function() {
-            handlePlayers(usernameInput.value);
-        };
-
-        draw(masterGame.state);
-    };
+    // cvs.removeEventListener("click", );
 
   
+
+    submitButton.onclick = function(e) {
+        // have to prevent the default behavior of the submit button to get this working properly.
+        e.preventDefault();
+        handlePlayers(usernameInput.value);
+    };
+
+};
+
+let gameStart = function () {
+    alert("Let the games begin!");
+    changeState(masterGame.state);
+    cvs.removeEventListener("click", gameStart);
+    draw(masterGame.state);
+};
 
 // };
 
@@ -220,14 +229,14 @@ function handlePlayers(name) {
     };
 
     return fetch(PLAYERS_URL, configObject)
+    // .then(response => console.log(response));
     .then(response => response.json())
-    .then(json => console.log("I was called in fetch!"));
+    .then(json => displayPlayerMenu(json));
 };
 
 function displayPlayerMenu(playerJSON) {
-    console.log("I was called!")
     let playerName = document.createElement('h1');
-    playerName.innerHTML = playerJSON;
+    playerName.innerHTML = playerJSON['data']['attributes']['username'];
 
     document.getElementById("main-menu").appendChild(playerName);
 };
