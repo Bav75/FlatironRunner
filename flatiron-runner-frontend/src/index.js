@@ -106,7 +106,22 @@ obstacles[0] = {x: cvs.width, y: 380};
 
 var reloadCounter = 0;
 
-document.addEventListener("keydown", jump);
+document.addEventListener("keydown", function(e) {
+    // handle jumping using space bar 
+    if (e.keyCode === 32) {
+        jump();
+    };
+
+    // handle moving forward
+    if (e.keyCode === 68) {
+        moveRight();
+    };
+
+    if (e.keyCode === 65) {
+        moveLeft();
+    };
+
+});
 
 function draw() {
     // var bg = new Image();
@@ -139,11 +154,11 @@ function draw() {
             if (reloadCounter == 5) {
                 location.reload();
             } else {
-                console.log(reloadCounter);
+                // console.log(reloadCounter);
                 ctx.drawImage(bomb, obstacles[i].x, 380, 70, 70);
-                obstacles[i].x--;
+                obstacles[i].x -= 7.5;
     
-                 if (obstacles[i].x == cvs.width - 600) {
+                 if (obstacles[i].x == cvs.width - 900) {
                      obstacles.push({
                          x: cvs.width,
                          y: 380
@@ -162,7 +177,9 @@ function draw() {
             // };
 
             // player sprite fall speed
-            sY += gravity;
+            if (sY <= 200) {
+                sY += gravity;
+            }
         };
         // ********************************************************
         // FOR LOOP APPROACH END 
@@ -264,8 +281,16 @@ function handlePlayers(name) {
 };
 
 function jump() {
-    sY -= 25;
-}
+    sY -= 100;
+};
+
+function moveRight() {
+    sX += 5;
+};
+
+function moveLeft() {
+    sX -= 5;
+};
 
 // update player model progress - have it be an integer that points to a specific set of levels on the frontend 
 
