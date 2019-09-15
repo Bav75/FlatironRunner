@@ -1,7 +1,7 @@
 class PlayersController < ApplicationController
 
     def create
-        binding.pry
+        # binding.pry
 
         username = params[:username]
 
@@ -10,9 +10,9 @@ class PlayersController < ApplicationController
             player.save
         end
 
-        # render: 
+        render json: PlayerSerializer.new(player) 
 
-        binding.pry
+        # binding.pry
     end
 
 end

@@ -187,8 +187,10 @@ function draw() {
         
     requestAnimationFrame(draw);
 };
-    
 
+
+// Game Menu and Player functions 
+    
 function changeState(gameState) {
     // if (gameState === "title") {
     //     masterGame.state = "menu";
@@ -212,8 +214,17 @@ function handlePlayers(name) {
         })
     };
 
-    fetch(PLAYERS_URL, configObject);
+    return fetch(PLAYERS_URL, configObject)
+    .then(response => response.json())
+    .then (json => displayPlayerMenu(json));
 };
+
+function displayPlayerMenu(playerJSON) {
+
+};
+
+
+// Game movement functions 
 
 function jump() {
     sY -= 100;
