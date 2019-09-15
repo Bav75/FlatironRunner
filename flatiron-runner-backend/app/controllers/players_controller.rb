@@ -3,12 +3,25 @@ class PlayersController < ApplicationController
     def create
         # binding.pry
 
+        game = Game.first
+
         username = params[:username]
 
-        player = Player.find_or_create_by(username: username)
-        if player.id == nil
-            player.save
+        # game.players.each do |player|
+        #     if player.username == username
+        #         player = Player.find_by(username: username)
+        #     end 
+        # end
+
+        if game.players.any? {|p| p.username == username}
+            player = Player.find_by(username: username)
+        else
+            player = game.players.create(username: username, character: "test")
         end
+
+        # if player.id == nil
+        #     player.save
+        # end
 
         render json: PlayerSerializer.new(player) 
 

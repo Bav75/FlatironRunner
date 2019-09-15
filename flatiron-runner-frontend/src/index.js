@@ -20,27 +20,28 @@ const PLAYERS_URL = `${BASE_URL}/players`
 
 
 // create main menu
-let main = document.querySelector('main');
+// let main = document.querySelector('main');
 
-let mainMenu = document.createElement('div');
-mainMenu.className = "main-menu";
+// let mainMenu = document.createElement('div');
+// mainMenu.className = "main-menu";
 
-let usernamePrompt = document.createElement('h1');
-usernamePrompt.innerHTML = "Enter your username below";
+// let usernamePrompt = document.createElement('h1');
+// usernamePrompt.innerHTML = "Enter your username below";
 
-let usernameInput = document.createElement('input');
-usernameInput.type = "text";
-usernameInput.id = "username";
+// let usernameInput = document.createElement('input');
+// usernameInput.type = "text";
+// usernameInput.id = "username";
 
-let submitButton = document.createElement('input');
-submitButton.type = "submit";
+let submitButton = document.getElementById('playerSubmit');
+let usernameInput = document.getElementById("username");
+// submitButton.type = "submit";
 
-usernamePrompt.appendChild(usernameInput);
-usernamePrompt.appendChild(submitButton);
+// usernamePrompt.appendChild(usernameInput);
+// usernamePrompt.appendChild(submitButton);
 
-mainMenu.appendChild(usernamePrompt);
+// mainMenu.appendChild(usernamePrompt);
 
-main.appendChild(mainMenu);
+// main.appendChild(mainMenu);
 
 // vars for handling canvas & context 
 let cvs = document.getElementById("canvas");
@@ -74,21 +75,25 @@ let masterGame = new Game("title");
 title.onload = function() {
     ctx.drawImage(title, 0, 0, 800, 512);
 
-    cvs.onclick = function() {
-        changeState(masterGame.state);
+    // cvs.onclick = function() {
+        cvs.addEventListener("click", function() {
+            changeState(masterGame.state);
+        });
 
         if (masterGame.state === "bg") {
-            cvs.removeEventListener("click");
+            cvs.removeEventListener("click", changeState);
+        };
+
+        submitButton.onclick = function() {
+            handlePlayers(usernameInput.value);
         };
 
         draw(masterGame.state);
     };
 
-    submitButton.onclick = function() {
-        handlePlayers(usernameInput.value);
-    };
+  
 
-};
+// };
 
 
 // am only able to get animations running when they are defined in the global scope??
@@ -216,11 +221,15 @@ function handlePlayers(name) {
 
     return fetch(PLAYERS_URL, configObject)
     .then(response => response.json())
-    .then (json => displayPlayerMenu(json));
+    .then(json => console.log("I was called in fetch!"));
 };
 
 function displayPlayerMenu(playerJSON) {
+    console.log("I was called!")
+    let playerName = document.createElement('h1');
+    playerName.innerHTML = playerJSON;
 
+    document.getElementById("main-menu").appendChild(playerName);
 };
 
 
@@ -241,7 +250,7 @@ function moveLeft() {
 
 // update player model progress - have it be an integer that points to a specific set of levels on the frontend 
 
-draw();
+// draw();
 
 
   // ********************************************************
