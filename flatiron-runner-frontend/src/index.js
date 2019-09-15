@@ -58,6 +58,13 @@ menu.src = "assets/menu.png";
 let sprite = new Image();
 sprite.src = "assets/man_sprite.png";
 
+// set sprite initial values
+let sX = 0; //x-axis pos
+let sY = 200; //x-axis pos
+
+// set value of gravity / fall speed 
+let gravity = 1.5;
+
 let bomb = new Image();
 bomb.src = "assets/bomb.png";
 
@@ -99,6 +106,8 @@ obstacles[0] = {x: cvs.width, y: 380};
 
 var reloadCounter = 0;
 
+document.addEventListener("keydown", jump);
+
 function draw() {
     // var bg = new Image();
     // // I have to give the img time to load.
@@ -108,8 +117,8 @@ function draw() {
         // obstacles[0] = {x: cvs.width, y: 380};
         // obstacles[0] = {x: 500, y: 380};
 
-        ctx.drawImage(bg, 0, 0, 800, 512);
-        ctx.drawImage(sprite, 0, 200, 165, 270); 
+        // ctx.drawImage(bg, 0, 0, 800, 512);
+        // ctx.drawImage(sprite, sX, sY, 165, 270); 
         // x = 0, y = 200 is the ground for the man sprite 
             
         // ctx.drawImage(bomb, cvs.width - 600, 380, 70, 70);
@@ -123,6 +132,10 @@ function draw() {
         // FOR LOOP APPROACH START 
         // var reloadCounter = 0;
         for (let i = 0; i < obstacles.length; i++) {
+
+            ctx.drawImage(bg, 0, 0, 800, 512);
+            ctx.drawImage(sprite, sX, sY, 165, 270); 
+
             if (reloadCounter == 5) {
                 location.reload();
             } else {
@@ -147,6 +160,9 @@ function draw() {
             //          y: 380
             //      });
             // };
+
+            // player sprite fall speed
+            sY += gravity;
         };
         // ********************************************************
         // FOR LOOP APPROACH END 
@@ -246,6 +262,10 @@ function handlePlayers(name) {
 
     fetch(PLAYERS_URL, configObject);
 };
+
+function jump() {
+    sY -= 25;
+}
 
 // update player model progress - have it be an integer that points to a specific set of levels on the frontend 
 
