@@ -66,6 +66,10 @@ let sY = 200; //x-axis pos
 // set value of gravity / fall speed 
 let gravity = 7.5;
 
+// create variable for current score
+var score = 0;
+
+
 let bomb = new Image();
 bomb.src = "assets/bomb.png";
 
@@ -99,6 +103,7 @@ let gameStart = function () {
     alert("Let the games begin!");
     changeState(masterGame.state);
     cvs.removeEventListener("click", gameStart);
+
     draw(masterGame.state);
 };
 
@@ -177,11 +182,13 @@ function draw() {
                     // (sY <= obstacles[i].y + 30 || sY + 22  >= obstacles[i].y)
                     // sY + 180  >= obstacles[i].y)
                     alert("You hit the bomb!");
+                    alert(`You score is ${score}`);
                     // alert(`bomb height ${obstacles[i].y}, sprite height ${sprite.height}, sY ${sY}`);
                     location.reload();
                 };
                 
                 if (obstacles[i].x == cvs.width - 900) {
+                    score += 10;
                     obstacles.push({
                         x: cvs.width,
                         y: 380
@@ -198,6 +205,10 @@ function draw() {
         // ********************************************************
         // FOR LOOP APPROACH END 
     };
+
+    ctx.fillStyle = "#000";
+    ctx.font = "30px Times New Roman";
+    ctx.fillText("Score : " + score, 10, cvs.height-20);
         
     requestAnimationFrame(draw);
 };
@@ -250,7 +261,7 @@ function createPlayerMenu(playerJSON) {
     let playerName = document.getElementById('menu-header');
     playerName.innerHTML = `Player: ${playerJSON['data']['attributes']['username']}`;
 
-    // create scoreboard
+    // add hi-score
     let hiScore = document.createElement("h2");
     hiScore.innerHTML = `Your hi-score: ${playerJSON['data']['attributes']['score']}`;
     menu.appendChild(hiScore);
