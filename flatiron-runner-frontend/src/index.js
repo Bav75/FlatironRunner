@@ -1,7 +1,8 @@
 // create a class for the Game to handle game states 
 class Game {
-    constructor(state) {
+    constructor(state, score=0) {
         this.state = state;
+        this.score = score;
     };
 
     // get state() {
@@ -13,6 +14,14 @@ class Game {
     // };
 
 };
+
+class Player {
+    constructor(username, hiScore) {
+        this.username = username;
+        this.hiScore = hiScore;
+    };
+
+}
 
 // URLS
 const BASE_URL = "http://localhost:3000"
@@ -67,7 +76,7 @@ let sY = 200; //x-axis pos
 let gravity = 7.5;
 
 // create variable for current score
-var score = 0;
+// var score = 0;
 
 
 let bomb = new Image();
@@ -175,20 +184,18 @@ function draw() {
                 ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 70, 70);
                 obstacles[i].x -= 7.5;
 
-                // collisions
-
+                // collisions & game over functionality 
                 if (sX + 11 >= obstacles[i].x && sX <= obstacles[i].x + 70 && sY + 180  >= obstacles[i].y) {
-                    // sX + 11 >= obstacles[i].x || sX <= obstacles[i].x + 70 && sY + 22  >= obstacles[i].y
-                    // (sY <= obstacles[i].y + 30 || sY + 22  >= obstacles[i].y)
-                    // sY + 180  >= obstacles[i].y)
-                    alert("You hit the bomb!");
-                    alert(`You score is ${score}`);
+                    alert(`You hit the bomb! Your score is ${masterGame.score}`);
+
+                    // reset score
+                    masterGame.score = 0;
                     // alert(`bomb height ${obstacles[i].y}, sprite height ${sprite.height}, sY ${sY}`);
                     location.reload();
                 };
                 
                 if (obstacles[i].x == cvs.width - 900) {
-                    score += 10;
+                    masterGame.score += 10;
                     obstacles.push({
                         x: cvs.width,
                         y: 380
@@ -208,14 +215,13 @@ function draw() {
 
     ctx.fillStyle = "#000";
     ctx.font = "30px Times New Roman";
-    ctx.fillText("Score : " + score, 10, cvs.height-20);
+    ctx.fillText("Score : " + masterGame.score, 10, cvs.height-20);
         
     requestAnimationFrame(draw);
 };
 
 
-// Game Menu and Player functions 
-    
+// State management functions 
 function changeState(gameState) {
     // if (gameState === "title") {
     //     masterGame.state = "menu";
@@ -226,6 +232,9 @@ function changeState(gameState) {
     };
 }
 
+// Player functions 
+
+// rename to fetchPlayers from handlePlayers
 function handlePlayers(name) {
     // make use of find or create by on the backend based off the username provided 
     let configObject = {
@@ -242,38 +251,54 @@ function handlePlayers(name) {
     return fetch(PLAYERS_URL, configObject)
     // .then(response => console.log(response));
     .then(response => response.json())
-    .then(json => displayPlayerMenu(json));
+    // .then(json => displayPlayerMenu(json))
+    .then(json => createPlayer(json))
+    .then(player => displayPlayerMenu(player));
 };
 
-function displayPlayerMenu(playerJSON) {
+function createPlayer(playerJSON) {
+    let username = playerJSON['data']['attributes']['username']
+    let hiScore = playerJSON['data']['attributes']['score']
+    return new Player(username, hiScore);
+};
+
+// Game Menu functions 
+
+function displayPlayerMenu(player) {
     // let playerName = document.createElement('h1');
     // playerName.innerHTML = playerJSON['data']['attributes']['username'];
 
     // document.getElementById("main-menu").appendChild(playerName);
-    createPlayerMenu(playerJSON);
+    createPlayerMenu(player);
 };
 
-function createPlayerMenu(playerJSON) {
+function updatePlayerScore() {
+    let hiscore = document.getElementById("hi-score");
+
+    // if (hiscore > )
+}
+
+function createPlayerMenu(player) {
     // select menu element
     let menu = document.getElementById("main-menu");
 
     // replace standard header with username 
     let playerName = document.getElementById('menu-header');
-    playerName.innerHTML = `Player: ${playerJSON['data']['attributes']['username']}`;
+    playerName.innerHTML = `Player: ${player.username}`;
 
     // add hi-score
     let hiScore = document.createElement("h2");
-    hiScore.innerHTML = `Your hi-score: ${playerJSON['data']['attributes']['score']}`;
+    hiScore.id = "hi-score";
+    hiScore.innerHTML = `Your hi-score: ${player.hiScore}`;
     menu.appendChild(hiScore);
 
     // remove the username form
     let form = document.getElementById("user-form");
     menu.removeChild(form);
-    
 };
 
 
-// Game movement functions 
+// Game mechanic functions 
 
 function jump() {
     sY -= 100;
