@@ -63,7 +63,7 @@ let sX = 0; //x-axis pos
 let sY = 200; //x-axis pos
 
 // set value of gravity / fall speed 
-let gravity = 1.5;
+let gravity = 7.5;
 
 let bomb = new Image();
 bomb.src = "assets/bomb.png";
@@ -76,6 +76,11 @@ title.onload = function() {
 
     cvs.onclick = function() {
         changeState(masterGame.state);
+
+        if (masterGame.state === "bg") {
+            cvs.removeEventListener("click");
+        };
+
         draw(masterGame.state);
     };
 
@@ -108,19 +113,27 @@ var reloadCounter = 0;
 
 document.addEventListener("keydown", function(e) {
     // handle jumping using space bar 
-    if (e.keyCode === 32) {
-        jump();
+    if (sX < 705 && sY > -100) {
+        if (e.keyCode === 32) {
+            jump();
+        };
+    
+        // handle moving forward
+        if (e.keyCode === 68) {
+            moveRight();
+        };
+    
+        
     };
 
-    // handle moving forward
-    if (e.keyCode === 68) {
-        moveRight();
+    // handle moving backwards
+    if (sX > -1) {
+        if (e.keyCode === 65) {
+            moveLeft();
+        };
     };
-
-    if (e.keyCode === 65) {
-        moveLeft();
-    };
-
+    
+   
 });
 
 function draw() {
@@ -282,6 +295,7 @@ function handlePlayers(name) {
 
 function jump() {
     sY -= 100;
+    sX += 70;
 };
 
 function moveRight() {
