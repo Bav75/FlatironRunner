@@ -16,7 +16,7 @@ class PlayersController < ApplicationController
         if game.players.any? {|p| p.username == username}
             player = Player.find_by(username: username)
         else
-            player = game.players.create(username: username, character: "test")
+            player = game.players.create(username: username, character: "test", score: 0)
         end
 
         # if player.id == nil

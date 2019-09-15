@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2019_09_11_164440) do
     t.string "username"
     t.text "progress", default: "--- []\n"
     t.string "character"
+    t.integer "score"
     t.integer "game_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

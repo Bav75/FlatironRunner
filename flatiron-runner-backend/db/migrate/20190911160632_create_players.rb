@@ -5,6 +5,7 @@ class CreatePlayers < ActiveRecord::Migration[5.2]
       # store player progress in an array and run checks against it
       t.text :progress, array: true, default: [].to_yaml
       t.string :character
+      t.integer :score
 
       t.belongs_to :game
 

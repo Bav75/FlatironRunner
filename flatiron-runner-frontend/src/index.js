@@ -235,10 +235,30 @@ function handlePlayers(name) {
 };
 
 function displayPlayerMenu(playerJSON) {
-    let playerName = document.createElement('h1');
-    playerName.innerHTML = playerJSON['data']['attributes']['username'];
+    // let playerName = document.createElement('h1');
+    // playerName.innerHTML = playerJSON['data']['attributes']['username'];
 
-    document.getElementById("main-menu").appendChild(playerName);
+    // document.getElementById("main-menu").appendChild(playerName);
+    createPlayerMenu(playerJSON);
+};
+
+function createPlayerMenu(playerJSON) {
+    // select menu element
+    let menu = document.getElementById("main-menu");
+
+    // replace standard header with username 
+    let playerName = document.getElementById('menu-header');
+    playerName.innerHTML = `Player: ${playerJSON['data']['attributes']['username']}`;
+
+    // create scoreboard
+    let hiScore = document.createElement("h2");
+    hiScore.innerHTML = `Your hi-score: ${playerJSON['data']['attributes']['score']}`;
+    menu.appendChild(hiScore);
+
+    // remove the username form
+    let form = document.getElementById("user-form");
+    menu.removeChild(form);
+    
 };
 
 
