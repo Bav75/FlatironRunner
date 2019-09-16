@@ -27,7 +27,6 @@ class Player {
 const BASE_URL = "http://localhost:3000"
 const PLAYERS_URL = `${BASE_URL}/players`
 
-
 // create main menu
 // let main = document.querySelector('main');
 
@@ -73,40 +72,25 @@ sprite.src = "assets/man_sprite.png";
 let sX = 0; //x-axis pos
 let sY = 200; //x-axis pos
 
-// set value of gravity / fall speed 
-let gravity = 7.5;
-
-// create variable for current score
-// var score = 0;
-
-
 let bomb = new Image();
 bomb.src = "assets/bomb.png";
+
+// set value of gravity / fall speed 
+let gravity = 7.5;
 
 // initialize the game session
 let masterGame = new Game("title");
 
+// declare global player variable 
 let masterPlayer;
 
 title.onload = function() {
     ctx.drawImage(title, 0, 0, 800, 512);
 
-    // cvs.onclick = function() {
-
-    // if (masterGame.state === "bg") {
-    //     cvs.removeEventListener("click", gameStart);
-    // };
-    
-    
-
-    // cvs.removeEventListener("click", );
-
-  
-
     submitButton.onclick = function(e) {
         // have to prevent the default behavior of the submit button to get this working properly.
         e.preventDefault();
-        handlePlayers(usernameInput.value);
+        fetchPlayers(usernameInput.value);
         // console.log(masterPlayer);
 
         // masterPlayer.then(displayPlayerMenu);
@@ -124,14 +108,10 @@ let gameStart = function () {
     draw(masterGame.state);
 };
 
-// };
-
-
 // am only able to get animations running when they are defined in the global scope??
 // FOR LOOP APPROACH 
 let obstacles = [];
 obstacles[0] = {x: cvs.width, y: 380};
-
 
 // WHILE LOOP APPROACH
 // let obstacle = {
@@ -165,8 +145,6 @@ document.addEventListener("keydown", function(e) {
             moveLeft();
         };
     };
-    
-   
 });
 
 function draw() {
@@ -179,17 +157,13 @@ function draw() {
 
         // ********************************************************
         // FOR LOOP APPROACH START 
-        // var reloadCounter = 0;
         for (let i = 0; i < obstacles.length; i++) {
 
             ctx.drawImage(bg, 0, 0, 800, 512);
             ctx.drawImage(sprite, sX, sY, 165, 270); 
-
-            // if (reloadCounter == 5) {
-            //     location.reload();
-            // } else {
-                // console.log(reloadCounter);
             ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 70, 70);
+
+            // movement speed for obstacles
             obstacles[i].x -= 7.5;
 
             // collisions & game over functionality 
@@ -207,24 +181,28 @@ function draw() {
             };
             
             if (obstacles[i].x == cvs.width - 900) {
+                // increment score by 10 for each bomb dodged 
                 masterGame.score += 10;
+
+                // add more obstacles to the level
                 obstacles.push({
                     x: cvs.width,
                     y: 380
                 });
-                // ++reloadCounter;
             };
         };
 
         // player sprite fall speed
-        if (sY <= 200) {
+        if (sY < 200) {
             sY += gravity;
-        }
+        };
 
+        // scoreboard 
         ctx.fillStyle = "#000";
         ctx.font = "30px Times New Roman";
         ctx.fillText("Score : " + masterGame.score, 10, cvs.height-20);
             
+        // loop animation 
         requestAnimationFrame(draw);
     };
         // ********************************************************
@@ -234,19 +212,17 @@ function draw() {
 
 // State management functions 
 function changeState(gameState) {
-    // if (gameState === "title") {
-    //     masterGame.state = "menu";
-    //     ctx.drawImage(menu, 0, 0, 800, 512);
-    // };
     if (gameState === "title") {
         masterGame.state = "bg";
-    };
-}
+    } else if (gameState === "bg") {
+        masterGame.state = "title"
+    }; 
+};
 
 // Player functions 
 
 // rename to fetchPlayers from handlePlayers
-function handlePlayers(name) {
+function fetchPlayers(name) {
     // make use of find or create by on the backend based off the username provided 
     let configObject = {
         method: "POST",
