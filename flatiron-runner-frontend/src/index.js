@@ -1,4 +1,9 @@
-// classes
+// URLS
+const BASE_URL = "http://localhost:3000"
+const PLAYERS_URL = `${BASE_URL}/players`
+
+
+// declare classes
 class Game {
     constructor(state, score=0) {
         this.state = state;
@@ -23,68 +28,32 @@ class Player {
     };
 };
 
-// URLS
-const BASE_URL = "http://localhost:3000"
-const PLAYERS_URL = `${BASE_URL}/players`
-
-// create main menu
-// let main = document.querySelector('main');
-
-// let mainMenu = document.createElement('div');
-// mainMenu.className = "main-menu";
-
-// let usernamePrompt = document.createElement('h1');
-// usernamePrompt.innerHTML = "Enter your username below";
-
-// let usernameInput = document.createElement('input');
-// usernameInput.type = "text";
-// usernameInput.id = "username";
-
-let submitButton = document.getElementById('playerSubmit');
-let usernameInput = document.getElementById("username");
-
-// submitButton.type = "submit";
-
-// usernamePrompt.appendChild(usernameInput);
-// usernamePrompt.appendChild(submitButton);
-
-// mainMenu.appendChild(usernamePrompt);
-
-// main.appendChild(mainMenu);
-
-// vars for handling canvas & context 
+// set vars for handling canvas & context 
 let cvs = document.getElementById("canvas");
 let ctx = cvs.getContext("2d");
 
-// load title screen & level assets 
+// load title screen & declare level assets 
 let bg = new Image();
-// bg.src = "assets/purple_bg.jpeg";
-// bg4 = "assets/bg4.png";
-// bg3 = "assets/bg3.png";
-// bg2 = "assets/bg2.png";
-// bg1 = "assets/bg1.jpeg";
-
-// bg.src = bg2;
-
-
 let title = new Image();
 title.src = "assets/titleScreen.png";
-// let menu = new Image();
-// menu.src = "assets/menu.png";
 
 // load sprite assets
 let sprite = new Image();
 sprite.src = "assets/man_sprite.png";
+let bomb = new Image();
+bomb.src = "assets/bomb.png";
 
 // set sprite initial values
 let sX = 0; //x-axis pos
 let sY = 200; //x-axis pos
 
-let bomb = new Image();
-bomb.src = "assets/bomb.png";
-
 // set value of gravity / fall speed 
 let gravity = 7.5;
+
+// am only able to get animations running when they are defined in the global scope??
+// FOR LOOP APPROACH - initialize obstacles 
+let obstacles = [];
+obstacles[0] = {x: cvs.width, y: 380};
 
 // initialize the game session
 let masterGame = new Game("title");
@@ -92,44 +61,11 @@ let masterGame = new Game("title");
 // declare global player variable 
 let masterPlayer;
 
-title.onload = function() {
-    loadTitle();
+// grab start menu buttons & input for fetch request
+let submitButton = document.getElementById('playerSubmit');
+let usernameInput = document.getElementById("username");
 
-    //handle fetching player from db or creating new player
-    submitButton.onclick = function(e) {
-        // have to prevent the default behavior of the submit button to get this working properly.
-        e.preventDefault();
-
-        fetchPlayers(usernameInput.value);
-    };
-};
-
-let gameStart = function () {
-    alert("Let the games begin!");
-    changeState(masterGame.state);
-    cvs.removeEventListener("click", gameStart);
-
-    draw(masterGame.state);
-};
-
-// am only able to get animations running when they are defined in the global scope??
-// FOR LOOP APPROACH 
-let obstacles = [];
-obstacles[0] = {x: cvs.width, y: 380};
-
-// WHILE LOOP APPROACH
-// let obstacle = {
-//     x: cvs.width,
-//     y: 380
-// };
-
-// THIS WORKS!!!!!
-// change the requirements for the reloadCounter ,i.e. how many obstacles on the level, depending on a difficulty modifier 
-// const DIFFICULTY = 5;
-// const GAP = 100;
-
-// var reloadCounter = 0;
-
+// event listeners for moving character 
 document.addEventListener("keydown", function(e) {
     if (sX < 705 && sY > -100) {
         // handle jumping using space bar 
@@ -150,6 +86,20 @@ document.addEventListener("keydown", function(e) {
         };
     };
 });
+
+// kick things off once the title loads
+title.onload = function() {
+    // clear canvas & load title screen
+    loadTitle();
+
+    //handle fetching player from db or creating new player
+    submitButton.onclick = function(e) {
+        // have to prevent the default behavior of the submit button to get this working properly.
+        e.preventDefault();
+
+        fetchPlayers(usernameInput.value);
+    };
+};
 
 function draw() {
     // var bg = new Image();
@@ -232,6 +182,14 @@ function changeState(gameState) {
     }; 
 };
 
+let gameStart = function () {
+    alert("Let the games begin!");
+    changeState(masterGame.state);
+    cvs.removeEventListener("click", gameStart);
+
+    draw(masterGame.state);
+};
+
 // Player functions 
 
 // rename to fetchPlayers from handlePlayers
@@ -288,15 +246,6 @@ function updatePlayerScore() {
 };
 
 // Game Menu functions 
-
-// function displayPlayerMenu(player) {
-//     // console.log(player);
-//     // let playerName = document.createElement('h1');
-//     // playerName.innerHTML = playerJSON['data']['attributes']['username'];
-
-//     // document.getElementById("main-menu").appendChild(playerName);
-//     createPlayerMenu(player);
-// };
 
 function createPlayerMenu(player) {
     // select menu element
@@ -438,3 +387,46 @@ function moveLeft() {
     // bg.src = "assets/purple_bg.jpeg";
     // ctx.drawImage(bg, 0, 0, 900, 512);
 // };
+
+// create main menu
+// let main = document.querySelector('main');
+
+// let mainMenu = document.createElement('div');
+// mainMenu.className = "main-menu";
+
+// let usernamePrompt = document.createElement('h1');
+// usernamePrompt.innerHTML = "Enter your username below";
+
+// let usernameInput = document.createElement('input');
+// usernameInput.type = "text";
+// usernameInput.id = "username";
+
+// submitButton.type = "submit";
+
+// usernamePrompt.appendChild(usernameInput);
+// usernamePrompt.appendChild(submitButton);
+
+// mainMenu.appendChild(usernamePrompt);
+
+// main.appendChild(mainMenu);
+
+// bg.src = "assets/purple_bg.jpeg";
+// bg4 = "assets/bg4.png";
+// bg3 = "assets/bg3.png";
+// bg2 = "assets/bg2.png";
+// bg1 = "assets/bg1.jpeg";
+
+// bg.src = bg2;
+
+// WHILE LOOP APPROACH
+// let obstacle = {
+//     x: cvs.width,
+//     y: 380
+// };
+
+// THIS WORKS!!!!!
+// change the requirements for the reloadCounter ,i.e. how many obstacles on the level, depending on a difficulty modifier 
+// const DIFFICULTY = 5;
+// const GAP = 100;
+
+// var reloadCounter = 0;
