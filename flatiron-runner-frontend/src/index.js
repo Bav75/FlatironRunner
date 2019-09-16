@@ -10,13 +10,15 @@ class Game {
         this.score = score;
     };
 
-    // get state() {
-    //     return this.state;
-    // };
+    // State management functions 
+    changeState() {
+        if (this.state === "title") {
+            this.state = "bg";
+        } else if (this.state === "bg") {
+            this.state = "title"
+        }; 
+    };
 
-    // set state(newState) {
-    //     this.gameState = newState;
-    // };
 
 };
 
@@ -136,7 +138,8 @@ function draw() {
 
                 // reset to title screen
                 // location.reload();
-                changeState(masterGame.state);
+                // changeState(masterGame.state);
+                masterGame.changeState();
                 // break;
                 resetSprites();
                 return loadTitle();
@@ -173,20 +176,19 @@ function draw() {
 };
 
 
-// State management functions 
-function changeState(gameState) {
-    if (gameState === "title") {
-        masterGame.state = "bg";
-    } else if (gameState === "bg") {
-        masterGame.state = "title"
-    }; 
-};
+// // State management functions 
+// function changeState(gameState) {
+//     if (gameState === "title") {
+//         masterGame.state = "bg";
+//     } else if (gameState === "bg") {
+//         masterGame.state = "title"
+//     }; 
+// };
 
 let gameStart = function () {
     alert("Let the games begin!");
-    changeState(masterGame.state);
+    masterGame.changeState();
     cvs.removeEventListener("click", gameStart);
-
     draw(masterGame.state);
 };
 
