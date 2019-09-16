@@ -16,9 +16,10 @@ class Game {
 };
 
 class Player {
-    constructor(username, hiScore) {
+    constructor(username, hiScore, id) {
         this.username = username;
         this.hiScore = hiScore;
+        this.id = id;
     };
 
 }
@@ -85,6 +86,8 @@ bomb.src = "assets/bomb.png";
 // initialize the game session
 let masterGame = new Game("title");
 
+let masterPlayer;
+
 title.onload = function() {
     ctx.drawImage(title, 0, 0, 800, 512);
 
@@ -94,7 +97,7 @@ title.onload = function() {
     //     cvs.removeEventListener("click", gameStart);
     // };
     
-    cvs.addEventListener("click", gameStart);
+    
 
     // cvs.removeEventListener("click", );
 
@@ -104,7 +107,12 @@ title.onload = function() {
         // have to prevent the default behavior of the submit button to get this working properly.
         e.preventDefault();
         handlePlayers(usernameInput.value);
+        // console.log(masterPlayer);
+
+        // masterPlayer.then(displayPlayerMenu);
     };
+
+    cvs.addEventListener("click", gameStart);
 
 };
 
@@ -186,11 +194,15 @@ function draw() {
 
                 // collisions & game over functionality 
                 if (sX + 11 >= obstacles[i].x && sX <= obstacles[i].x + 70 && sY + 180  >= obstacles[i].y) {
-                    alert(`You hit the bomb! Your score is ${masterGame.score}`);
+                    alert(`You hit the bomb! Your final score is ${masterGame.score}`);
+
+                    // handle checking / updating of score
+                    checkPlayerScore();
 
                     // reset score
                     masterGame.score = 0;
-                    // alert(`bomb height ${obstacles[i].y}, sprite height ${sprite.height}, sY ${sY}`);
+
+                    // reset game
                     location.reload();
                 };
                 
@@ -251,32 +263,55 @@ function handlePlayers(name) {
     return fetch(PLAYERS_URL, configObject)
     // .then(response => console.log(response));
     .then(response => response.json())
+    // .then(json => console.log(json));
     // .then(json => displayPlayerMenu(json))
     .then(json => createPlayer(json))
     .then(player => displayPlayerMenu(player));
 };
 
 function createPlayer(playerJSON) {
-    let username = playerJSON['data']['attributes']['username']
-    let hiScore = playerJSON['data']['attributes']['score']
-    return new Player(username, hiScore);
+    let username = playerJSON['data']['attributes']['username'];
+    let hiScore = playerJSON['data']['attributes']['score'];
+    let id = parseInt(playerJSON['data']['id'], 10);
+    masterPlayer = new Player(username, hiScore, id);
+    return masterPlayer;
+};
+
+function checkPlayerScore() {
+    if (masterGame.score > masterPlayer.hiScore) {
+        alert(`Congrats on your new hi-score of ${masterPlayer.hiScore}!`);
+    };
+};
+
+function updatePlayerScore() {
+
+    let player_url = PLAYERS_URL + `/${masterPlayer.id}`;
+
+    let configObject = {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            username: masterPlayer.username,
+            score: masterPlayer.hiScore
+        })
+    };
+
+    fetch(player_url, configObject);
 };
 
 // Game Menu functions 
 
 function displayPlayerMenu(player) {
+    // console.log(player);
     // let playerName = document.createElement('h1');
     // playerName.innerHTML = playerJSON['data']['attributes']['username'];
 
     // document.getElementById("main-menu").appendChild(playerName);
     createPlayerMenu(player);
 };
-
-function updatePlayerScore() {
-    let hiscore = document.getElementById("hi-score");
-
-    // if (hiscore > )
-}
 
 function createPlayerMenu(player) {
     // select menu element
