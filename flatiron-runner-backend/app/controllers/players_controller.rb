@@ -30,7 +30,7 @@ class PlayersController < ApplicationController
 
     def update      
         
-        binding.pry
+        # binding.pry
         username = params[:username]
 
         player = Player.find_by(username: username)

@@ -1,4 +1,4 @@
-// create a class for the Game to handle game states 
+// classes
 class Game {
     constructor(state, score=0) {
         this.state = state;
@@ -21,8 +21,7 @@ class Player {
         this.hiScore = hiScore;
         this.id = id;
     };
-
-}
+};
 
 // URLS
 const BASE_URL = "http://localhost:3000"
@@ -44,6 +43,7 @@ const PLAYERS_URL = `${BASE_URL}/players`
 
 let submitButton = document.getElementById('playerSubmit');
 let usernameInput = document.getElementById("username");
+
 // submitButton.type = "submit";
 
 // usernamePrompt.appendChild(usernameInput);
@@ -144,7 +144,7 @@ obstacles[0] = {x: cvs.width, y: 380};
 // const DIFFICULTY = 5;
 // const GAP = 100;
 
-var reloadCounter = 0;
+// var reloadCounter = 0;
 
 document.addEventListener("keydown", function(e) {
     if (sX < 705 && sY > -100) {
@@ -185,51 +185,50 @@ function draw() {
             ctx.drawImage(bg, 0, 0, 800, 512);
             ctx.drawImage(sprite, sX, sY, 165, 270); 
 
-            if (reloadCounter == 5) {
-                location.reload();
-            } else {
+            // if (reloadCounter == 5) {
+            //     location.reload();
+            // } else {
                 // console.log(reloadCounter);
-                ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 70, 70);
-                obstacles[i].x -= 7.5;
+            ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 70, 70);
+            obstacles[i].x -= 7.5;
 
-                // collisions & game over functionality 
-                if (sX + 11 >= obstacles[i].x && sX <= obstacles[i].x + 70 && sY + 180  >= obstacles[i].y) {
-                    alert(`You hit the bomb! Your final score is ${masterGame.score}`);
+            // collisions & game over functionality 
+            if (sX + 11 >= obstacles[i].x && sX <= obstacles[i].x + 70 && sY + 180  >= obstacles[i].y) {
+                alert(`You hit the bomb! Your final score is ${masterGame.score}`);
 
-                    // handle checking / updating of score
-                    checkPlayerScore();
+                // handle checking / updating of score
+                checkPlayerScore();
 
-                    // reset score
-                    masterGame.score = 0;
+                // reset score
+                masterGame.score = 0;
 
-                    // reset game
-                    location.reload();
-                };
-                
-                if (obstacles[i].x == cvs.width - 900) {
-                    masterGame.score += 10;
-                    obstacles.push({
-                        x: cvs.width,
-                        y: 380
-                    });
-                    ++reloadCounter;
-                };
+                // reset game
+                location.reload();
             };
-
-            // player sprite fall speed
-            if (sY <= 200) {
-                sY += gravity;
-            }
+            
+            if (obstacles[i].x == cvs.width - 900) {
+                masterGame.score += 10;
+                obstacles.push({
+                    x: cvs.width,
+                    y: 380
+                });
+                // ++reloadCounter;
+            };
         };
+
+        // player sprite fall speed
+        if (sY <= 200) {
+            sY += gravity;
+        }
+
+        ctx.fillStyle = "#000";
+        ctx.font = "30px Times New Roman";
+        ctx.fillText("Score : " + masterGame.score, 10, cvs.height-20);
+            
+        requestAnimationFrame(draw);
+    };
         // ********************************************************
         // FOR LOOP APPROACH END 
-    };
-
-    ctx.fillStyle = "#000";
-    ctx.font = "30px Times New Roman";
-    ctx.fillText("Score : " + masterGame.score, 10, cvs.height-20);
-        
-    requestAnimationFrame(draw);
 };
 
 
@@ -279,13 +278,12 @@ function createPlayer(playerJSON) {
 
 function checkPlayerScore() {
     if (masterGame.score > masterPlayer.hiScore) {
-        alert(`Congrats on your new hi-score of ${masterPlayer.hiScore}!`);
+        alert(`Congrats on your new hi-score of ${masterGame.score}!`);
         updatePlayerScore();
     };
 };
 
 function updatePlayerScore() {
-
     let player_url = PLAYERS_URL + `/${masterPlayer.id}`;
 
     let configObject = {
@@ -348,6 +346,10 @@ function moveRight() {
 function moveLeft() {
     sX -= 5;
 };
+
+
+
+//////////NOTES//////////
 
 // update player model progress - have it be an integer that points to a specific set of levels on the frontend 
 
