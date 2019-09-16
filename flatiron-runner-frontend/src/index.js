@@ -19,7 +19,6 @@ class Game {
         }; 
     };
 
-
 };
 
 class Player {
@@ -215,16 +214,6 @@ function draw() {
         // ********************************************************
         // FOR LOOP APPROACH END 
 };
-
-
-// // State management functions 
-// function changeState(gameState) {
-//     if (gameState === "title") {
-//         masterGame.state = "bg";
-//     } else if (gameState === "bg") {
-//         masterGame.state = "title"
-//     }; 
-// };
 
 let gameStart = function () {
     alert("Let the games begin!");
@@ -472,4 +461,13 @@ function resetSprites() {
 //     };
 
 //     fetch(player_url, configObject);
+// };
+
+// // State management functions 
+// function changeState(gameState) {
+//     if (gameState === "title") {
+//         masterGame.state = "bg";
+//     } else if (gameState === "bg") {
+//         masterGame.state = "title"
+//     }; 
 // };
