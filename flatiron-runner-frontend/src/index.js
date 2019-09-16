@@ -42,6 +42,32 @@ class Player {
     moveLeft() {
         sX -= 5;
     };
+
+    // Score functions
+    checkScore() {
+        if (masterGame.score > this.hiScore) {
+            alert(`Congrats on your new hi-score of ${masterGame.score}!`);
+            updateScore();
+        };
+    };
+    
+    updateScore() {
+        let player_url = PLAYERS_URL + `/${masterPlayer.id}`;
+    
+        let configObject = {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                username: masterPlayer.username,
+                score: masterGame.score
+            })
+        };
+    
+        fetch(player_url, configObject);
+    };
 };
 
 // set vars for handling canvas & context 
@@ -83,22 +109,24 @@ let usernameInput = document.getElementById("username");
 
 // event listeners for moving character 
 document.addEventListener("keydown", function(e) {
-    if (sX < 705 && sY > -100) {
-        // handle jumping using space bar 
-        if (e.keyCode === 32) {
-            masterPlayer.jump();
+    if (masterGame.state === "bg") {
+        if (sX < 705 && sY > -100) {
+            // handle jumping using space bar 
+            if (e.keyCode === 32) {
+                masterPlayer.jump();
+            };
+        
+            // handle moving forward using d
+            if (e.keyCode === 68) {
+                masterPlayer.moveRight();
+            };
         };
-    
-        // handle moving forward using d
-        if (e.keyCode === 68) {
-            masterPlayer.moveRight();
-        };
-    };
 
-    // handle moving backwards using a
-    if (sX > -1) {
-        if (e.keyCode === 65) {
-            masterPlayer.moveLeft();
+        // handle moving backwards using a
+        if (sX > -1) {
+            if (e.keyCode === 65) {
+                masterPlayer.moveLeft();
+            };
         };
     };
 });
@@ -145,16 +173,15 @@ function draw() {
                 alert(`You hit the bomb! Your final score is ${masterGame.score}`);
 
                 // handle checking / updating of score
-                checkPlayerScore();
+                // checkPlayerScore();
+                masterPlayer.checkScore();
 
                 // reset score
                 masterGame.score = 0;
 
                 // reset to title screen
                 // location.reload();
-                // changeState(masterGame.state);
                 masterGame.changeState();
-                // break;
                 resetSprites();
                 return loadTitle();
             };
@@ -234,31 +261,6 @@ function createPlayer(playerJSON) {
     let id = parseInt(playerJSON['data']['id'], 10);
     masterPlayer = new Player(username, hiScore, id);
     return masterPlayer;
-};
-
-function checkPlayerScore() {
-    if (masterGame.score > masterPlayer.hiScore) {
-        alert(`Congrats on your new hi-score of ${masterGame.score}!`);
-        updatePlayerScore();
-    };
-};
-
-function updatePlayerScore() {
-    let player_url = PLAYERS_URL + `/${masterPlayer.id}`;
-
-    let configObject = {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: JSON.stringify({
-            username: masterPlayer.username,
-            score: masterGame.score
-        })
-    };
-
-    fetch(player_url, configObject);
 };
 
 // Game Menu functions 
@@ -446,3 +448,28 @@ function resetSprites() {
 // const GAP = 100;
 
 // var reloadCounter = 0;
+
+// function checkPlayerScore() {
+//     if (masterGame.score > masterPlayer.hiScore) {
+//         alert(`Congrats on your new hi-score of ${masterGame.score}!`);
+//         updatePlayerScore();
+//     };
+// };
+
+// function updatePlayerScore() {
+//     let player_url = PLAYERS_URL + `/${masterPlayer.id}`;
+
+//     let configObject = {
+//         method: "PATCH",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "Accept": "application/json"
+//         },
+//         body: JSON.stringify({
+//             username: masterPlayer.username,
+//             score: masterGame.score
+//         })
+//     };
+
+//     fetch(player_url, configObject);
+// };
