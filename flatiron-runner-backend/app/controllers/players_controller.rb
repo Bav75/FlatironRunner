@@ -28,4 +28,20 @@ class PlayersController < ApplicationController
         # binding.pry
     end
 
+    def update      
+        
+        binding.pry
+        username = params[:username]
+
+        player = Player.find_by(username: username)
+
+        player.update(score: params[:score])
+
+        render json: PlayerSerializer.new(player) 
+    end
+
+    # def player_params
+    #     params.require(:player).permit(:username, :score)
+    # end
+
 end

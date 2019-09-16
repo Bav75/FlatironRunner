@@ -280,6 +280,7 @@ function createPlayer(playerJSON) {
 function checkPlayerScore() {
     if (masterGame.score > masterPlayer.hiScore) {
         alert(`Congrats on your new hi-score of ${masterPlayer.hiScore}!`);
+        updatePlayerScore();
     };
 };
 
@@ -295,7 +296,7 @@ function updatePlayerScore() {
         },
         body: JSON.stringify({
             username: masterPlayer.username,
-            score: masterPlayer.hiScore
+            score: masterGame.score
         })
     };
 
