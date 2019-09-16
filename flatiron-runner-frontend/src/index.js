@@ -236,12 +236,9 @@ function fetchPlayers(name) {
     };
 
     return fetch(PLAYERS_URL, configObject)
-    // .then(response => console.log(response));
     .then(response => response.json())
-    // .then(json => console.log(json));
-    // .then(json => displayPlayerMenu(json))
     .then(json => createPlayer(json))
-    .then(player => displayPlayerMenu(player));
+    .then(player => createPlayerMenu(player));
 };
 
 function createPlayer(playerJSON) {
@@ -279,14 +276,14 @@ function updatePlayerScore() {
 
 // Game Menu functions 
 
-function displayPlayerMenu(player) {
-    // console.log(player);
-    // let playerName = document.createElement('h1');
-    // playerName.innerHTML = playerJSON['data']['attributes']['username'];
+// function displayPlayerMenu(player) {
+//     // console.log(player);
+//     // let playerName = document.createElement('h1');
+//     // playerName.innerHTML = playerJSON['data']['attributes']['username'];
 
-    // document.getElementById("main-menu").appendChild(playerName);
-    createPlayerMenu(player);
-};
+//     // document.getElementById("main-menu").appendChild(playerName);
+//     createPlayerMenu(player);
+// };
 
 function createPlayerMenu(player) {
     // select menu element
