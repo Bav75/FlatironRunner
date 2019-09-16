@@ -85,19 +85,15 @@ let masterGame = new Game("title");
 let masterPlayer;
 
 title.onload = function() {
-    ctx.drawImage(title, 0, 0, 800, 512);
+    loadTitle();
 
+    //handle fetching player from db or creating new player
     submitButton.onclick = function(e) {
         // have to prevent the default behavior of the submit button to get this working properly.
         e.preventDefault();
+
         fetchPlayers(usernameInput.value);
-        // console.log(masterPlayer);
-
-        // masterPlayer.then(displayPlayerMenu);
     };
-
-    cvs.addEventListener("click", gameStart);
-
 };
 
 let gameStart = function () {
@@ -152,7 +148,7 @@ function draw() {
     // // I have to give the img time to load.
     // // remember ASYNC! 
 
-    if (masterGame.state === "bg") {
+    // if (masterGame.state === "bg") {
         // x = 0, y = 200 is the ground for the man sprite 
 
         // ********************************************************
@@ -176,8 +172,12 @@ function draw() {
                 // reset score
                 masterGame.score = 0;
 
-                // reset game
-                location.reload();
+                // reset to title screen
+                // location.reload();
+                changeState(masterGame.state);
+                // break;
+                resetSprites();
+                return loadTitle();
             };
             
             if (obstacles[i].x == cvs.width - 900) {
@@ -204,7 +204,8 @@ function draw() {
             
         // loop animation 
         requestAnimationFrame(draw);
-    };
+    // };
+    // loadTitle();
         // ********************************************************
         // FOR LOOP APPROACH END 
 };
@@ -302,6 +303,23 @@ function createPlayerMenu(player) {
     // remove the username form
     let form = document.getElementById("user-form");
     menu.removeChild(form);
+};
+
+// handle loading / reloading of title screen
+function loadTitle() {
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    // obstacles.length = 0;
+    ctx.drawImage(title, 0, 0, 800, 512);
+    cvs.addEventListener("click", gameStart);
+};
+
+function resetSprites() {
+    sX = 0;
+    sY = 200;
+
+    // reset obstacles
+    obstacles.length = 0;
+    obstacles[0] = {x: cvs.width, y: 380};
 };
 
 
