@@ -58,11 +58,19 @@ let ctx = cvs.getContext("2d");
 
 // load title screen & level assets 
 let bg = new Image();
-bg.src = "assets/purple_bg.jpeg";
+// bg.src = "assets/purple_bg.jpeg";
+// bg4 = "assets/bg4.png";
+// bg3 = "assets/bg3.png";
+// bg2 = "assets/bg2.png";
+// bg1 = "assets/bg1.jpeg";
+
+// bg.src = bg2;
+
+
 let title = new Image();
 title.src = "assets/titleScreen.png";
-let menu = new Image();
-menu.src = "assets/menu.png";
+// let menu = new Image();
+// menu.src = "assets/menu.png";
 
 // load sprite assets
 let sprite = new Image();
@@ -150,6 +158,10 @@ function draw() {
 
     // if (masterGame.state === "bg") {
         // x = 0, y = 200 is the ground for the man sprite 
+
+        // handle level selection dynamically 
+        let level = document.getElementById("level-select");
+        bg.src = `assets/bg${level.value}.png`;
 
         // ********************************************************
         // FOR LOOP APPROACH START 
@@ -299,6 +311,16 @@ function createPlayerMenu(player) {
     hiScore.id = "hi-score";
     hiScore.innerHTML = `Your hi-score: ${player.hiScore}`;
     menu.appendChild(hiScore);
+
+    // add level selector
+    let levelHeader = document.createElement("h3");
+    levelHeader.innerHTML = "Select your level (1-6) below";
+
+    let levelSelect = document.createElement("input");
+    levelSelect.id = "level-select";
+    levelSelect.type = "number";
+    menu.appendChild(levelHeader);
+    menu.appendChild(levelSelect);
 
     // remove the username form
     let form = document.getElementById("user-form");
