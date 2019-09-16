@@ -219,7 +219,7 @@ let gameStart = function () {
     alert("Let the games begin!");
     masterGame.changeState();
     cvs.removeEventListener("click", gameStart);
-    draw(masterGame.state);
+    draw();
 };
 
 // Player functions 
