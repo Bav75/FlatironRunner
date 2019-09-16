@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
 
-    def show
+    def update
     end
 
 end
