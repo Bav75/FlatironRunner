@@ -28,6 +28,20 @@ class Player {
         this.hiScore = hiScore;
         this.id = id;
     };
+
+    // Game mechanic functions 
+    jump() {
+        sY -= 100;
+        sX += 70;
+    };
+
+    moveRight() {
+        sX += 5;
+    };
+
+    moveLeft() {
+        sX -= 5;
+    };
 };
 
 // set vars for handling canvas & context 
@@ -72,19 +86,19 @@ document.addEventListener("keydown", function(e) {
     if (sX < 705 && sY > -100) {
         // handle jumping using space bar 
         if (e.keyCode === 32) {
-            jump();
+            masterPlayer.jump();
         };
     
         // handle moving forward using d
         if (e.keyCode === 68) {
-            moveRight();
+            masterPlayer.moveRight();
         };
     };
 
     // handle moving backwards using a
     if (sX > -1) {
         if (e.keyCode === 65) {
-            moveLeft();
+            masterPlayer.moveLeft();
         };
     };
 });
@@ -296,20 +310,20 @@ function resetSprites() {
 };
 
 
-// Game mechanic functions 
+// // Game mechanic functions 
 
-function jump() {
-    sY -= 100;
-    sX += 70;
-};
+// function jump() {
+//     sY -= 100;
+//     sX += 70;
+// };
 
-function moveRight() {
-    sX += 5;
-};
+// function moveRight() {
+//     sX += 5;
+// };
 
-function moveLeft() {
-    sX -= 5;
-};
+// function moveLeft() {
+//     sX -= 5;
+// };
 
 
 
