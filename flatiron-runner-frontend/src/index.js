@@ -46,12 +46,20 @@ class Player {
     checkScore() {
         if (masterGame.score > this.hiScore) {
             alert(`Congrats on your new hi-score of ${masterGame.score}!`);
-            updateScore();
+            // this.updateScore();
+
+            // update scoreboard
+            let score = document.getElementById("hi-score");
+            score.innerHTML = `Your hi-score: ${masterGame.score}`;
+
+            return true;
         };
     };
     
     updateScore() {
         let player_url = PLAYERS_URL + `/${masterPlayer.id}`;
+
+        this.hiScore = masterGame.score;
     
         let configObject = {
             method: "PATCH",
@@ -61,7 +69,7 @@ class Player {
             },
             body: JSON.stringify({
                 username: masterPlayer.username,
-                score: masterGame.score
+                score: this.score
             })
         };
     
@@ -173,7 +181,12 @@ function draw() {
 
                 // handle checking / updating of score
                 // checkPlayerScore();
-                masterPlayer.checkScore();
+                console.log(masterPlayer.hiScore);
+                console.log(masterPlayer);
+                console.log(masterGame.score);
+                if (masterPlayer.checkScore()) {
+                    masterPlayer.updateScore();
+                };
 
                 // reset score
                 masterGame.score = 0;

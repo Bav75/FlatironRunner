@@ -37,7 +37,7 @@ class PlayersController < ApplicationController
 
         player.update(score: params[:score])
 
-        render json: PlayerSerializer.new(player) 
+        # render json: PlayerSerializer.new(player) 
     end
 
     # def player_params
