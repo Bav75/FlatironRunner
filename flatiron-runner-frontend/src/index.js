@@ -181,9 +181,6 @@ function draw() {
 
                 // handle checking / updating of score
                 // checkPlayerScore();
-                console.log(masterPlayer.hiScore);
-                console.log(masterPlayer);
-                console.log(masterGame.score);
                 if (masterPlayer.checkScore()) {
                     masterPlayer.updateScore();
                 };
@@ -232,6 +229,7 @@ let gameStart = function () {
     alert("Let the games begin!");
     masterGame.changeState();
     cvs.removeEventListener("click", gameStart);
+    // requestAnimationFrame(draw);
     draw();
 };
 
