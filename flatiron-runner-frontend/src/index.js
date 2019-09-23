@@ -33,8 +33,10 @@ class Game {
         // if you set an all time hi score
         if (check) {
             let game_url = GAME_URL + `/1`;
-
             this.allTimeScore = this.score;
+
+            let allTime = document.getElementById("all-time");
+            allTime.innerHTML = `All Time Hi-Score: ${this.allTimeScore}`;
         
             let configObject = {
                 method: "PATCH",
