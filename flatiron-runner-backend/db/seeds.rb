@@ -6,4 +6,4 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-masterGame = Game.create(levels: ["lvl1", "lvl2", "lvl3"])
+masterGame = Game.create()

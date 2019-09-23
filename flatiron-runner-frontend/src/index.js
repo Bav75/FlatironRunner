@@ -1,13 +1,15 @@
 // URLS
 const BASE_URL = "http://localhost:3000"
 const PLAYERS_URL = `${BASE_URL}/players`
+const GAME_URL = `${BASE_URL}/games`
 
 
 // declare classes
 class Game {
-    constructor(state, score=0) {
+    constructor(state, score=0, allTimeScore=0) {
         this.state = state;
         this.score = score;
+        this.allTimeScore = allTimeScore;
     };
 
     // State management functions 
@@ -17,6 +19,35 @@ class Game {
         } else if (this.state === "bg") {
             this.state = "title"
         }; 
+    };
+
+    checkAllTimeScore() {
+        if (this.score > this.allTimeScore) {
+            alert(`You just set an all-time hi-score of ${this.score}! Congrats!`);
+            return true;
+        }
+        return false; 
+    }
+
+    updateAllTimeScore(check) {
+        // if you set an all time hi score
+        if (check) {
+            let game_url = GAME_URL + `/1`;
+
+            this.allTimeScore = this.score;
+        
+            let configObject = {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    score: this.allTimeScore
+                })
+            };
+            fetch(game_url, configObject);
+        }
     };
 
 };
@@ -47,19 +78,24 @@ class Player {
         if (masterGame.score > this.hiScore) {
             alert(`Congrats on your new hi-score of ${masterGame.score}!`);
             // this.updateScore();
+            this.hiScore = masterGame.score;
 
             // update scoreboard
             let score = document.getElementById("hi-score");
-            score.innerHTML = `Your hi-score: ${masterGame.score}`;
+            score.innerHTML = `Your hi-score: ${this.hiScore}`;
 
             return true;
         };
     };
+
+    // checkAllTimeScore() {
+    //     if (masterGame)
+    // }
     
     updateScore() {
         let player_url = PLAYERS_URL + `/${masterPlayer.id}`;
 
-        this.hiScore = masterGame.score;
+        // this.hiScore = masterGame.score;
     
         let configObject = {
             method: "PATCH",
@@ -69,7 +105,7 @@ class Player {
             },
             body: JSON.stringify({
                 username: masterPlayer.username,
-                score: this.score
+                score: this.hiScore
             })
         };
     
@@ -105,7 +141,8 @@ let obstacles = [];
 obstacles[0] = {x: cvs.width, y: 380};
 
 // initialize the game session
-let masterGame = new Game("title");
+// let masterGame = new Game("title");
+let masterGame;
 
 // declare global player variable 
 let masterPlayer;
@@ -114,43 +151,68 @@ let masterPlayer;
 let submitButton = document.getElementById('playerSubmit');
 let usernameInput = document.getElementById("username");
 
-// event listeners for moving character 
-document.addEventListener("keydown", function(e) {
-    if (masterGame.state === "bg") {
-        if (sX < 705 && sY > -100) {
-            // handle jumping using space bar 
-            if (e.keyCode === 32) {
-                masterPlayer.jump();
-            };
-        
-            // handle moving forward using d
-            if (e.keyCode === 68) {
-                masterPlayer.moveRight();
-            };
-        };
-
-        // handle moving backwards using a
-        if (sX > -1) {
-            if (e.keyCode === 65) {
-                masterPlayer.moveLeft();
-            };
-        };
-    };
-});
-
 // kick things off once the title loads
 title.onload = function() {
     // clear canvas & load title screen
     loadTitle();
+
+    fetchGame();
 
     //handle fetching player from db or creating new player
     submitButton.onclick = function(e) {
         // have to prevent the default behavior of the submit button to get this working properly.
         e.preventDefault();
 
+        document.addEventListener("keydown", function(e) {
+            if (masterGame.state === "bg") {
+                if (sX < 705 && sY > -100) {
+                    // handle jumping using space bar 
+                    if (e.keyCode === 32) {
+                        masterPlayer.jump();
+                    };
+                
+                    // handle moving forward using d
+                    if (e.keyCode === 68) {
+                        masterPlayer.moveRight();
+                    };
+                };
+        
+                // handle moving backwards using a
+                if (sX > -1) {
+                    if (e.keyCode === 65) {
+                        masterPlayer.moveLeft();
+                    };
+                };
+            };
+        });
+
         fetchPlayers(usernameInput.value);
     };
 };
+
+// event listeners for moving character 
+// document.addEventListener("keydown", function(e) {
+//     if (masterGame.state === "bg") {
+//         if (sX < 705 && sY > -100) {
+//             // handle jumping using space bar 
+//             if (e.keyCode === 32) {
+//                 masterPlayer.jump();
+//             };
+        
+//             // handle moving forward using d
+//             if (e.keyCode === 68) {
+//                 masterPlayer.moveRight();
+//             };
+//         };
+
+//         // handle moving backwards using a
+//         if (sX > -1) {
+//             if (e.keyCode === 65) {
+//                 masterPlayer.moveLeft();
+//             };
+//         };
+//     };
+// });
 
 function draw() {
     // var bg = new Image();
@@ -184,6 +246,10 @@ function draw() {
                 if (masterPlayer.checkScore()) {
                     masterPlayer.updateScore();
                 };
+
+                if (masterGame.checkAllTimeScore()) {
+                    masterGame.updateAllTimeScore(masterGame.checkAllTimeScore());
+                }
 
                 // reset score
                 masterGame.score = 0;
@@ -279,8 +345,14 @@ function createPlayerMenu(player) {
     hiScore.innerHTML = `Your hi-score: ${player.hiScore}`;
     menu.appendChild(hiScore);
 
+    // all time score
+    let allTimeScore = document.createElement("h3");
+    allTimeScore.id = "all-time";
+    allTimeScore.innerHTML = `All Time Hi-Score: ${masterGame.allTimeScore}`;
+    menu.appendChild(allTimeScore);
+
     // add level selector
-    let levelHeader = document.createElement("h3");
+    let levelHeader = document.createElement("h4");
     levelHeader.innerHTML = "Select your level (1-6) below";
 
     let levelSelect = document.createElement("input");
@@ -309,6 +381,20 @@ function resetSprites() {
     // reset obstacles
     obstacles.length = 0;
     obstacles[0] = {x: cvs.width, y: 380};
+};
+
+// Master Game Methods 
+function fetchGame() {
+    return fetch(GAME_URL)
+    .then(response => response.json())
+    .then(json => createMasterGame(json));
+};
+
+function createMasterGame(game_JSON) {
+    let allTimeScore = game_JSON['data']['attributes']['score'];
+
+    masterGame = new Game("title", 0, allTimeScore);
+    return masterGame;
 };
 
 
